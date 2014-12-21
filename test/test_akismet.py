@@ -108,12 +108,16 @@ def results(req):
     else:
         return res_line % 'Ham'
 
+def print_(msg):
+    sys.stdout.write('%s' % msg)
+    sys.stdout.write('\n')
+
 def main():
     # getrequest, serverline, cgiprint, replace - all come from cgituils
     req = getrequest(valuelist)
     cgiprint(serverline)
     cgiprint()
-    print header
+    print_(header)
     #
     if req['comment'].strip():
         result = '<br><br>%s<br><br>' % results(req)
@@ -124,13 +128,13 @@ def main():
     for key, val in req.items():
         rep['**%s**' % key] = val.strip()
     rep['**scriptname**'] = os.environ['SCRIPT_NAME']
-    print replace(form, rep)
-    print footer
+    print_(replace(form, rep))
+    print_(footer)
 
 
 if __name__ == '__main__':
     if not 'SCRIPT_NAME' in os.environ:
-        print 'This script must be run as a CGI'
+        print_('This script must be run as a CGI')
     else:
         main()
 

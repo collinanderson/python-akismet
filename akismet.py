@@ -56,7 +56,10 @@ Usage example::
 
 
 import os, sys
-from urllib import urlencode
+try:
+    from urllib.parse import urlencode
+except ImportError:  # Python 2
+    from urllib import urlencode
 
 import socket
 if hasattr(socket, 'setdefaulttimeout'):
@@ -85,7 +88,10 @@ urllib2 = None
 try:
     from google.appengine.api import urlfetch
 except ImportError:
-    import urllib2
+    try:
+        import urllib.request as urllib2
+    except ImportError:  # Python 2
+        import urllib2
 
 if urllib2 is None:
     def _fetch_url(url, data, headers):
@@ -133,7 +139,7 @@ class Akismet(object):
     def _safeRequest(self, url, data, headers):
         try:
             resp = _fetch_url(url, data, headers)
-        except Exception, e:
+        except Exception as e:
             raise AkismetError(str(e))
         return resp
 
